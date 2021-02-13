@@ -63,6 +63,7 @@ public class ExpenseAutomatorApplication implements CommandLineRunner {
                         pdfService.getSlotDate(),
                         properties.getUser0Id(),
                         properties.getUser1Id()));
+                pdfService.deleteFile();
             } catch (ParseException e) {
                 e.printStackTrace();
             }

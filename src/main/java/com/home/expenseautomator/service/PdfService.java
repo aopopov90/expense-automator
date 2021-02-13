@@ -16,9 +16,11 @@ public class PdfService {
 
     private String totalPaid;
     private String slotDate;
+    private String filePath;
 
     public void parse(String filePath) throws IOException {
-        String text = parsePdf(filePath);
+        this.filePath = filePath;
+        String text = parsePdf(this.filePath);
         this.totalPaid = extractTotalPaid(text);
         this.slotDate = extractSlotTime(text);
     }
@@ -49,5 +51,9 @@ public class PdfService {
         String text = new PDFTextStripper().getText(pdDoc);
         pdDoc.close();
         return text;
+    }
+
+    public void deleteFile() {
+        new File(this.filePath).delete();
     }
 }
