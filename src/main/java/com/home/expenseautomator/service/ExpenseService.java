@@ -1,7 +1,6 @@
 package com.home.expenseautomator.service;
 
 import com.home.expenseautomator.model.Expense;
-import com.home.expenseautomator.model.ExpenseResponse;
 import com.home.expenseautomator.model.ExpenseResponseWrapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -9,7 +8,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
-import java.util.List;
+import java.util.Date;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -20,38 +19,36 @@ public class ExpenseService {
 
     private final WebClient swWebClient;
 
-    public boolean expenseExists() {
-        ExpenseResponseWrapper response = getExpenses().block();
+    public void submitExpense(Expense expense) {
+        if (!expenseExists(expense)) {
+            swWebClient.post()
+                    .uri("/create_expense")
+                    .body(Mono.just(expense), Expense.class)
+                    .retrieve()
+                    .bodyToMono(String.class)
+                    .block();
+            log.info("Expense submitted: {}", expense.toString());
+        } else {
+            log.info("Expense already exists on Splitwise: {}", expense.toString());
+        }
 
-        List<ExpenseResponse> expenseResponses = response
+    }
+
+    private boolean expenseExists(Expense expense) {
+        return getExpenses(expense.getDeliveryDate()).block()
                 .getExpenses()
                 .stream()
                 .filter(expenseResponse -> Objects.isNull(expenseResponse.getDeletedAt()))
-                .collect(Collectors.toList());
-
-        expenseResponses.forEach(expenseResponse -> log.info(expenseResponse.getDescription() +
-                " | " + expenseResponse.getDeletedAt()));
-
-        return false;
+                .filter(expenseResponse -> expense.getDescription().equals(expenseResponse.getDescription()))
+                .collect(Collectors.toList())
+                .size() >= 1;
     }
 
-    public void submitExpense(Expense expense) {
-        String response = swWebClient.post()
-                .uri("/create_expense")
-                .body(Mono.just(expense), Expense.class)
-                .retrieve()
-                .bodyToMono(String.class)
-                .block();
-
-        System.out.println(expense);
-
-    }
-
-    public Mono<ExpenseResponseWrapper> getExpenses() {
+    public Mono<ExpenseResponseWrapper> getExpenses(Date date) {
         return swWebClient.get()
                 .uri(uriBuilder -> uriBuilder
                         .path("/get_expenses")
-                        .queryParam("dated_after", "2021-02-01T00:00:00Z")
+                        .queryParam("dated_after", date)
                         .build())
                 .retrieve()
                 .bodyToMono(ExpenseResponseWrapper.class);

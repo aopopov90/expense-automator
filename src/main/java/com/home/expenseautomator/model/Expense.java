@@ -31,9 +31,9 @@ public class Expense {
         this.users1UserId = users1UserId;
 
         SimpleDateFormat format = new SimpleDateFormat("EEEE d MMMM yyyy");
-        timestamp = format.parse(description.replaceAll("(?<=\\d)(st|nd|rd|th)", "").trim());
+        deliveryDate = format.parse(description.replaceAll("(?<=\\d)(st|nd|rd|th)", "").trim());
         SimpleDateFormat format2 = new SimpleDateFormat("dd-MMM");
-        this.description = format2.format(timestamp) + " | Sainsbury's";
+        this.description = format2.format(deliveryDate) + " | Sainsbury's";
     }
 
     String cost;
@@ -43,7 +43,7 @@ public class Expense {
     boolean payment;
 
     @JsonIgnore
-    Date timestamp;
+    Date deliveryDate;
 
     @JsonProperty("users__0__user_id")
     Integer users0UserId;

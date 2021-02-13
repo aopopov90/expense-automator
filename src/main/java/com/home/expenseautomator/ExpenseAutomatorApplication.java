@@ -44,7 +44,7 @@ public class ExpenseAutomatorApplication implements CommandLineRunner {
         // Extracting receipts from gmail
         List<String> receiptNames = new ArrayList<>();
         try {
-            receiptNames = gmailService.extractReceipts(1);
+            receiptNames = gmailService.extractReceipts(3);
         } catch (GeneralSecurityException | IOException e) {
             log.error("Failing to extract sainsbury's receipts", e);
         }
