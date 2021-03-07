@@ -30,7 +30,6 @@ jobs:
         APPLICATION_PROPERTIES: ${{ secrets.APPLICATION_PROPERTIES }}
         GMAIL_CREDENTIALS: ${{ secrets.GMAIL_CREDENTIALS }}
       run: |
-        cd build/libs
         echo -n "$APPLICATION_PROPERTIES" > application.properties
         echo -n "$GMAIL_CREDENTIALS" > credentials.json
-        java -jar expense-automator-0.0.1-SNAPSHOT.jar
+        java -jar build/libs/expense-automator-0.0.1-SNAPSHOT.jar
