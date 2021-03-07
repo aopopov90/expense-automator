@@ -35,4 +35,4 @@ jobs:
         echo -n "$APPLICATION_PROPERTIES" > resources/application.properties
         echo -n "$GMAIL_CREDENTIALS" > resources/credentials.json
         ls -lh resources
-        java -jar expense-automator-0.0.1-SNAPSHOT.jar -cp ./resources
+        java -jar expense-automator-0.0.1-SNAPSHOT.jar -cp ./resources/credentials.json
