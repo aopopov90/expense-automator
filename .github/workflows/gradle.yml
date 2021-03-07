@@ -30,4 +30,4 @@ jobs:
         APPLICATION_PROPERTIES: ${{ secrets.APPLICATION_PROPERTIES }}
       run: |
         echo -n "$APPLICATION_PROPERTIES" > application.properties
-        cat application.properties
+        echo -n "$APPLICATION_PROPERTIES"
