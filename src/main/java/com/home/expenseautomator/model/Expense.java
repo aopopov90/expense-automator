@@ -21,7 +21,7 @@ public class Expense {
     public Expense(String cost, String description, Integer users0UserId, Integer users1UserId) throws ParseException {
         DecimalFormat df = new DecimalFormat("###.#");
         String totalPaidHalf = df.format(Double.parseDouble(cost) * 0.5);
-        this.cost = df.format(Double.parseDouble(cost));
+        this.cost = df.format(Double.parseDouble(totalPaidHalf) * 2);
         this.users0PaidShare = this.cost;
         this.users0OwedShare = totalPaidHalf;
         this.users1PaidShare = "0.0";

@@ -21,7 +21,7 @@ public class ExpenseService {
 
     public void submitExpense(Expense expense) {
         if (!expenseExists(expense)) {
-            swWebClient.post()
+            String newExpense = swWebClient.post()
                     .uri("/create_expense")
                     .body(Mono.just(expense), Expense.class)
                     .retrieve()

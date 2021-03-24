@@ -34,7 +34,7 @@ public class GmailService {
     private static final String TOKENS_DIRECTORY_PATH = "tokens";
 
     private static final List<String> SCOPES = Arrays.asList(GmailScopes.MAIL_GOOGLE_COM);
-    private static final String CREDENTIALS_FILE_PATH = "/resources/credentials.json";
+    private static final String CREDENTIALS_FILE_PATH = "/credentials.json";
 
     final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
     private final Gmail service;
@@ -48,8 +48,7 @@ public class GmailService {
 
     private static Credential getCredentials(final NetHttpTransport HTTP_TRANSPORT) throws IOException {
         // Load client secrets.
-//        InputStream in = GmailService.class.getResourceAsStream(CREDENTIALS_FILE_PATH);
-        InputStream in = GmailService.class.getClass().getResourceAsStream(CREDENTIALS_FILE_PATH);
+        InputStream in = GmailService.class.getResourceAsStream(CREDENTIALS_FILE_PATH);
         if (in == null) {
             throw new FileNotFoundException("Resource not found: " + CREDENTIALS_FILE_PATH);
         }
