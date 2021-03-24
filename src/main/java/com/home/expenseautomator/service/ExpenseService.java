@@ -4,6 +4,7 @@ import com.home.expenseautomator.model.Expense;
 import com.home.expenseautomator.model.ExpenseResponseWrapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
@@ -21,13 +22,19 @@ public class ExpenseService {
 
     public void submitExpense(Expense expense) {
         if (!expenseExists(expense)) {
-            String newExpense = swWebClient.post()
+            ExpenseResponseWrapper response = swWebClient.post()
                     .uri("/create_expense")
                     .body(Mono.just(expense), Expense.class)
                     .retrieve()
-                    .bodyToMono(String.class)
+                    .onStatus(httpStatus -> !HttpStatus.OK.equals(httpStatus),
+                            r -> r.bodyToMono(String.class).map(body -> new Exception(body)))
+                    .bodyToMono(ExpenseResponseWrapper.class)
                     .block();
-            log.info("Expense submitted: {}", expense.toString());
+
+            if (response.getErrors().size() > 0)
+                log.error("Failed to create expense: {}", response.getErrors());
+            else
+                log.info("Expense submitted: {}", expense.toString());
         } else {
             log.info("Expense already exists on Splitwise: {}", expense.toString());
         }
