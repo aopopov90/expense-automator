@@ -1,7 +1,6 @@
 package com.home.expenseautomator.service;
 
 import com.home.expenseautomator.model.Expense;
-import com.home.expenseautomator.model.ExpenseResponse;
 import com.home.expenseautomator.model.ExpenseResponseWrapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,13 +23,13 @@ public class ExpenseService {
     public void submitExpense(Expense expense) {
         if (!expenseExists(expense)) {
             ExpenseResponseWrapper response = swWebClient.post()
-                .uri("/create_expense")
-                .body(Mono.just(expense), Expense.class)
-                .retrieve()
-                .onStatus(httpStatus -> !HttpStatus.OK.equals(httpStatus),
-                        r -> r.bodyToMono(String.class).map(body -> new Exception(body)))
-                .bodyToMono(ExpenseResponseWrapper.class)
-                .block();
+                    .uri("/create_expense")
+                    .body(Mono.just(expense), Expense.class)
+                    .retrieve()
+                    .onStatus(httpStatus -> !HttpStatus.OK.equals(httpStatus),
+                            r -> r.bodyToMono(String.class).map(body -> new Exception(body)))
+                    .bodyToMono(ExpenseResponseWrapper.class)
+                    .block();
 
             if (response.getErrors().size() > 0)
                 log.error("Failed to create expense: {}", response.getErrors());
