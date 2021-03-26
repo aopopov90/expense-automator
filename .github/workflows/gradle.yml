@@ -26,9 +26,7 @@ jobs:
         APPLICATION_PROPERTIES: ${{ secrets.APPLICATION_PROPERTIES }}
         GMAIL_CREDENTIALS: ${{ secrets.GMAIL_CREDENTIALS }}
       run: |
-        whoami
-        hostname
-        ifconfig
+        nslookup hostname
         mkdir -p src/main/resources
         echo -n "$APPLICATION_PROPERTIES" > src/main/resources/application.properties
         echo -n "$GMAIL_CREDENTIALS" > src/main/resources/credentials.json
