@@ -1,5 +1,6 @@
 package com.home.expenseautomator.service;
 
+import com.home.expenseautomator.config.Properties;
 import com.home.expenseautomator.model.Expense;
 import com.home.expenseautomator.model.ExpenseResponseWrapper;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +10,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -19,6 +23,7 @@ import java.util.stream.Collectors;
 public class ExpenseService {
 
     private final WebClient swWebClient;
+    private final Properties properties;
 
     public void submitExpense(Expense expense) {
         if (!expenseExists(expense)) {
@@ -42,7 +47,7 @@ public class ExpenseService {
     }
 
     private boolean expenseExists(Expense expense) {
-        return getExpenses(expense.getDeliveryDate()).block()
+        return getExpenses().block()
                 .getExpenses()
                 .stream()
                 .filter(expenseResponse -> Objects.isNull(expenseResponse.getDeletedAt()))
@@ -51,11 +56,13 @@ public class ExpenseService {
                 .size() >= 1;
     }
 
-    public Mono<ExpenseResponseWrapper> getExpenses(Date date) {
+    public Mono<ExpenseResponseWrapper> getExpenses() {
         return swWebClient.get()
                 .uri(uriBuilder -> uriBuilder
                         .path("/get_expenses")
-                        .queryParam("dated_after", date)
+                        .queryParam("dated_after",
+                                Instant.now().minus(properties.getExpensesSpanDays(), ChronoUnit.DAYS).toString())
+                        .queryParam("limit", properties.getExpensesLimit())
                         .build())
                 .retrieve()
                 .bodyToMono(ExpenseResponseWrapper.class);

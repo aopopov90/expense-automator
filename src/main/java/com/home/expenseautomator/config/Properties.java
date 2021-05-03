@@ -14,4 +14,6 @@ public class Properties {
     Integer user1Id;
     String splitwiseApiKey;
     String splitwiseBaseUrl;
+    Integer expensesLimit;
+    Integer expensesSpanDays;
 }
