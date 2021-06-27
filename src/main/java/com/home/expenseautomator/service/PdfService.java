@@ -7,8 +7,8 @@ import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+
+import static com.home.expenseautomator.util.StringUtils.extractRegex;
 
 @Data
 @Component
@@ -26,23 +26,11 @@ public class PdfService {
     }
 
     public String extractTotalPaid(String text) throws IOException {
-        Pattern pattern = Pattern.compile("Total paid £(.*?)\n");
-        Matcher matcher = pattern.matcher(text);
-        String result = null;
-        if (matcher.find()) {
-            result = matcher.group(1);
-        }
-        return result;
+        return extractRegex(text, "Total paid £(.*?)\n");
     }
 
     public String extractSlotTime(String text) throws IOException {
-        Pattern pattern = Pattern.compile("Slot time:(.*?),");
-        Matcher matcher = pattern.matcher(text);
-        String result = null;
-        if (matcher.find()) {
-            result = matcher.group(1);
-        }
-        return result;
+        return extractRegex(text, "Slot time:(.*?),");
     }
 
     private String parsePdf(String filePath) throws IOException {

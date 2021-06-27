@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 
 import java.text.DecimalFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Data
@@ -17,6 +16,24 @@ import java.util.Date;
 @AllArgsConstructor
 @Component
 public class Expense {
+
+    String cost;
+    String description;
+    boolean payment;
+    @JsonIgnore
+    Date deliveryDate;
+    @JsonProperty("users__0__user_id")
+    Integer users0UserId;
+    @JsonProperty("users__1__user_id")
+    Integer users1UserId;
+    @JsonProperty("users__1__paid_share")
+    String users1PaidShare;
+    @JsonProperty("users__1__owed_share")
+    String users1OwedShare;
+    @JsonProperty("users__0__paid_share")
+    String users0PaidShare;
+    @JsonProperty("users__0__owed_share")
+    String users0OwedShare;
 
     public Expense(String cost, String description, Integer users0UserId, Integer users1UserId) throws ParseException {
         DecimalFormat df = new DecimalFormat("###.#");
@@ -29,37 +46,5 @@ public class Expense {
         this.description = description;
         this.users0UserId = users0UserId;
         this.users1UserId = users1UserId;
-
-        SimpleDateFormat format = new SimpleDateFormat("EEEE d MMMM yyyy");
-        deliveryDate = format.parse(description.replaceAll("(?<=\\d)(st|nd|rd|th)", "").trim());
-        SimpleDateFormat format2 = new SimpleDateFormat("dd-MMM");
-        this.description = format2.format(deliveryDate) + " | Sainsbury's";
     }
-
-    String cost;
-
-    String description;
-
-    boolean payment;
-
-    @JsonIgnore
-    Date deliveryDate;
-
-    @JsonProperty("users__0__user_id")
-    Integer users0UserId;
-
-    @JsonProperty("users__1__user_id")
-    Integer users1UserId;
-
-    @JsonProperty("users__1__paid_share")
-    String users1PaidShare;
-
-    @JsonProperty("users__1__owed_share")
-    String users1OwedShare;
-
-    @JsonProperty("users__0__paid_share")
-    String users0PaidShare;
-
-    @JsonProperty("users__0__owed_share")
-    String users0OwedShare;
 }

@@ -5,9 +5,9 @@ name: Build
 
 on:
   push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+    branches: [ develop ]
+  pull_request_review_comment:
+    types: [ created ]
 
 jobs:
   build:
@@ -20,6 +20,15 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: 1.8
+    - name: Run_0
+      shell: bash
+      env:
+        APPLICATION_PROPERTIES: ${{ secrets.APPLICATION_PROPERTIES }}
+        GMAIL_CREDENTIALS: ${{ secrets.GMAIL_CREDENTIALS }}
+      run: |
+        mkdir -p src/main/resources
+        echo -n "$APPLICATION_PROPERTIES" > src/main/resources/application.properties
+        echo -n "$GMAIL_CREDENTIALS" > src/main/resources/credentials.json
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     - name: Build with Gradle
@@ -30,9 +39,8 @@ jobs:
         APPLICATION_PROPERTIES: ${{ secrets.APPLICATION_PROPERTIES }}
         GMAIL_CREDENTIALS: ${{ secrets.GMAIL_CREDENTIALS }}
       run: |
-        cd build/libs/
-        mkdir resources
-        echo -n "$APPLICATION_PROPERTIES" > resources/application.properties
-        echo -n "$GMAIL_CREDENTIALS" > resources/credentials.json
-        ls -lh resources
-        java -jar expense-automator-0.0.1-SNAPSHOT.jar
+        mkdir -p resources/main
+        echo -n "$APPLICATION_PROPERTIES" > resources/main/application.properties
+        echo -n "$GMAIL_CREDENTIALS" > resources/main/credentials.json
+        ls -lh resources/main
+        java -jar build/libs/expense-automator-0.0.1-SNAPSHOT.jar

@@ -5,6 +5,7 @@ import lombok.Data;
 
 @Data
 public class ExpenseResponse {
+
     String description;
 
     @JsonProperty("deleted_at")
