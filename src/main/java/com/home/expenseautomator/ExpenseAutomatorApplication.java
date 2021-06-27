@@ -54,7 +54,7 @@ public class ExpenseAutomatorApplication implements CommandLineRunner {
 
         List<Expense> expenseRequests = new ArrayList<>();
         try {
-            abelAndColeService.extractEmailBody(3).forEach(emailBody -> {
+            abelAndColeService.extractEmailBody(1).forEach(emailBody -> {
                 try {
                     SimpleDateFormat formatReceipt = new SimpleDateFormat("dd MMMM yyyy");
                     SimpleDateFormat formatTarget = new SimpleDateFormat("dd-MMM");
